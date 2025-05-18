@@ -43,13 +43,11 @@ int get_cost(void)
     int cost;
     do
     {
-        int cost = get_int("How much does the item cost (0 to 100 cents)? ");
-        return cost;
+        cost = get_int("How much does the item cost (0 to 100 cents)? ");
     }
+    while (cost < 0 || cost > 100);
 
-    //the below is bugged -- it does not reject negative inputs
-    while (cost >= 0 && cost <=100);
-    
+    //next line sets cost to a fixed number, for testing purposes only
     //int cost = 47;
     return cost;
 }
