@@ -46,7 +46,9 @@ int get_cost(void)
         int cost = get_int("How much does the item cost (0 to 100 cents)? ");
         return cost;
     }
-    while (cost > 0);
+
+    //the below is bugged -- it does not reject negative inputs
+    while (cost >= 0 && cost <=100);
     
     //int cost = 47;
     return cost;
