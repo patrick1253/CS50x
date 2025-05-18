@@ -1,4 +1,6 @@
 #include <stdio.h>
+//#include </home/pmd/CS-50x/CS50x/Week_1/cash/cs50.h>
+#include <cs50.h>
 
 int get_cost(void);
 int calc_change(int cost);
@@ -16,6 +18,8 @@ int calc_change(int cost)
 {
     int change = 100 - cost;
 
+    printf("Cost: %i\nChange owed: %i\n", cost, change);
+
     int quarters = (change) / 25;
     change = change % 25;
 
@@ -29,8 +33,6 @@ int calc_change(int cost)
 
     int num_coins = quarters + dimes + nickels + pennies;
 
-    printf("Cost: %i\nChange: %i\n", cost, change);
-
     printf("Quarters: %i, Dimes: %i, Nickels: %i, Pennies: %i\n", quarters, dimes, nickels, pennies);
     return num_coins;
 }
@@ -38,13 +40,14 @@ int calc_change(int cost)
 
 int get_cost(void)
 {
-    //int cost;
-    //do
-    //{
-    //    int cost = get_int("How much does the item cost? ");
-    //}
-    //while (cost < 1;)
+    int cost;
+    do
+    {
+        int cost = get_int("How much does the item cost (0 to 100 cents)? ");
+        return cost;
+    }
+    while (cost > 0);
     
-    int cost = 81;
+    //int cost = 47;
     return cost;
 }
