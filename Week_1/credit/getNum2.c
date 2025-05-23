@@ -5,31 +5,85 @@
 
 void numStringToIntArray(char* sourceArray, int length, int* destArray);
 void checkArrayContents(int* nameArray, int length);
-int luhnsAlgorithm(int* nameArray, int length);
+int checkIssuer(int* nameArray, int length, int* issuer);
+int luhnsAlgorithm(int* nameArray, int length, int* validity);
 
 
 int main(void)
 {
-    char card[] = "4003600000000014"; // source string, as single-element array of chars
+    char card[16];  // source string, as single-element array of chars
+    printf("Enter credit card number: ");
+    scanf("%s", card);
+        
     int length = strlen(card);
     int cCard[16];  // destination array, containing elements of source string as integers
+    int issuedBy[] = {0};
+    int valid[] = {0};
 
-    numStringToIntArray(card, length, cCard); // converts numerical string to array of single-digit integers
-    checkArrayContents(cCard, length);   // confirms string was properly converted to int array
-    //luhnsAlgorithm(cCard, length);  
+    numStringToIntArray(card, length, cCard); 
+    
+    // optional helper program for debugging -- prints entire array to confirm string was properly converted:    
+    // checkArrayContents(cCard, length);   
+
+ 
+    checkIssuer(cCard, length, issuedBy);
+    
+    if (*valid == 0)
+    {
+        if (*issuedBy != 0)
+        {
+            printf("%d\n", *issuedBy);
+            printf("Credit Card number is VALID\n");
+        }
+    } 
+        else 
+    {
+        printf("Credit Card number is inVALID. \n");
+
+    /*
+    printf("Issuer: ");
+    switch (checkIssuer(cCard, length, issuedBy))
+    {
+        case 3:
+            *issuedBy = 3;
+            printf("AMEX\n");
+            break;
+        case 4:
+            *issuedBy = 4;
+            printf("VISA\n");
+            break;
+        case 5:
+            *issuedBy = 5;
+            printf("MASTERCARD\n");
+            break;
+        //case 9:
+        //    *issuedBy = 9;
+        //    printf("Invalid Issuer\n");
+        default:
+            printf("INVALID\n");
+            break;
+    }
+    
+
+   
 
     if (luhnsAlgorithm(cCard, length))  // checks validity of credit card number using algorithm
     {
+        printf("%d\n", *issuedBy);
+        if (*issuedBy != 0) // checks validity of first digits versus credit card Issuer format
+        {
         printf("Credit Card number is VALID\n");
+        }
     } 
-    else 
+        else 
     {
-        printf("Credit Card number is INVALID. \n");
+        printf("Credit Card number is inVALID. \n");
     }
+    */
 }
 
-
 void numStringToIntArray(char* sourceArray, int length, int* destArray)
+    // converts numerical string to array of single-digit integers
 {   
     int digit;
 
@@ -42,9 +96,10 @@ void numStringToIntArray(char* sourceArray, int length, int* destArray)
 
 
 void checkArrayContents(int* nameArray, int length)
-    // Checks contents of array of integers
+    // Helper function for debugging:  Prints contents of array of integers
 {   
-    printf("cCard: [");
+    printf("cCard: [");  
+
     for (int j = 0; j < length - 1; j++)
     {
         printf("%i, ", nameArray[j]);
@@ -54,11 +109,86 @@ void checkArrayContents(int* nameArray, int length)
 }
 
 
-int luhnsAlgorithm(int* nameArray, int length)
+int checkIssuer(int* nameArray, int length, int* issuer)
+    // Checks whether first digits match Issuer formats
 {
+    if (length < 13)
+    {
+        printf("Credit card number seems too short to be valid\n");
+    }
+    int first = nameArray[0];
+    int second = nameArray[1];
+    int formatCode = 0;
+    
+    if (first == 4) // all VISA cards begin with 4
+    {
+        formatCode = 4;
+    } 
+
+    if (first == 3) // all AMEX cards begin with 34 or 37
+    {
+        if (second == 4 || second == 7)
+        {
+            formatCode = 3;
+        }
+    } 
+
+    if (first == 5) // all MASTERCARDs begin with 51, 52, 53, 54, or 55
+    {
+        if (second > 0 && second < 6)
+        {
+            formatCode = 5;
+        }
+    }
+
+    switch (formatCode)
+    {
+        case 3:
+            *issuer = 3;
+            printf("AMEX\n");
+            break;
+        case 4:
+            *issuer = 4;
+            printf("VISA\n");
+            break;
+        case 5:
+            *issuer = 5;
+            printf("MASTERCARD\n");
+            break;
+        //case 9:
+        //    *issuedBy = 9;
+        //    printf("Invalid Issuer\n");
+        default:
+            printf("INVALID\n");
+            break;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
+    else
+    {
+        return 9;
+    }
+    */
+}
+
+int luhnsAlgorithm(int* nameArray, int length, int* validity)
+    // checks validity of credit card number using 3-step algorithm:
+
     // Step 1:  Multiply every other digit by 2, starting with the second to last digit, 
     // and sum THEIR DIGITS (i.e.: 12 is 1+2, not +12) digits
-
+{
     int checkDoubleSum = 0;
     for (int k = 2; k <= length; k = k + 2)
     {
@@ -69,10 +199,10 @@ int luhnsAlgorithm(int* nameArray, int length)
         }
         checkDoubleSum = checkDoubleSum + ((checkDoubleDigit *2) % 10);
 
-        printf("cCard[double]: %i, \n", nameArray[length - k]);
+        // printf("cCard[double]: %i, \n", nameArray[length - k]); // optional debugging statement
     }
     
-    printf("checkDoubleSum: %i\n", checkDoubleSum);
+    // printf("checkDoubleSum: %i\n", checkDoubleSum);  // optional debugging statement
     
     // Step 2: Get sum of digits that were not multiplied by 2 in the previous step
 
@@ -82,17 +212,18 @@ int luhnsAlgorithm(int* nameArray, int length)
         int checkSingleDigit = nameArray[length - k];
         checkSingleSum = checkSingleSum + (checkSingleDigit);
 
-        printf("cCard[single]: %i, \n", nameArray[length - k]);
+        // printf("cCard[single]: %i, \n", nameArray[length - k]); // optional debugging statement
     }
     
-    printf("checkSingleSum: %i\n", checkSingleSum);
+     // printf("checkSingleSum: %i\n", checkSingleSum);  // optional debugging statement
         
     // Step 3: Add the checkDoubleSum to the checkSingleSum.  If the total sum mod 10 == 0, return True
 
     int checkSum = checkSingleSum + checkDoubleSum;
     printf("checkSum: %i\n", checkSum);
 
-    return checkSum % 10 == 0;
+    //return checkSum % 10 == 0;
+    *validity = (checkSum % 10 == 0);
 
 }
 
