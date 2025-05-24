@@ -1,10 +1,13 @@
 // CS50x assignment
 
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 int scoreLetter(char* input, int* value[26][2]);
+int scoreWord(char* word, int length);
+
 
 int letterValues[26][2] = {{'a',1}, {'b',3}, {'c',3}, {'d',2}, {'e',1}, \
                             {'f',4}, {'g',2}, {'h',4}, {'i',1}, {'j',8}, \
@@ -29,37 +32,71 @@ int main(void)
         }    
     }
     
-    //printf("letter: %c, letter value: %d\n", letterValues[20][0], letterValues[20][1]);
+    int scores[2];
+
+    for (int p = 0; p < 2; p++)
+        // accept user input
+    {
+        char word[20];  // source string, as single-element array of chars
+
+        printf("Player %i, enter your word: ", p + 1);
+        scanf("%s", word);
+        int length = strlen(word);
+
+        //printf("word: %s\n", word);
+        for (int i = 0; i < length; i++)
+            word[i] = tolower(word[i]);
+        //printf("word: %s\n", word);
+
+        //printf("Player %i: %s\n", p + 1, word);
+
+        scores[p] = scoreWord(word, length);
+    }
+    //printf("Player 1 score: %i\n", scores[0]);
+    //printf("Player 2 score: %i\n", scores[1]);
+      
+    if (scores[0] == scores[1])
+    {
+        printf("It's a tie!\n");
+    }
+
+    if (scores[0] > scores[1])
+    {
+        printf("Player 1 wins!\n");
+    }
     
+    if (scores[0] < scores[1])
+    {
+        printf("Player 2 wins!\n");
+    }
+}
 
-    // accept user input
-    char word1[20];  // source string, as single-element array of chars
-    printf("Enter first word: ");
-    scanf("%s", word1);
-    int length = strlen(word1);
-    //int cCard[16];  // destination array, containing elements of CC number (source string) as integers
 
+int scoreWord(char* word, int length)
+    // Add the letter scores for all letters in the word and return the word score to main().
+{
     int totalScore = 0;
 
     for (int k = 0; k < length; k++)
     {
-        char inputLetter = word1[k];
+        char inputLetter = word[k];
         char* pInput = &inputLetter;
         totalScore = totalScore + scoreLetter(pInput, pLetterValues);
     }
         printf("Total Word Score: %i\n", totalScore);
-
+        return totalScore;
 }
 
+
 int scoreLetter(char* input, int* value[26][2])
-    // receive one letter, search for that letter in letterValues[0], pull score from letterValues[1]
+    // receive one letter, search for that letter in letterValues, return score from letterValues
 {
     char inputLetter = *input;
     //printf("string: %c, ascii: %d\n", inputLetter, inputLetter);
-    printf("letter: %c,  ", inputLetter);
+    //printf("letter: %c,  ", inputLetter);
 
     int score = *value[(inputLetter - 97)][1];
-    printf("letter score: %d\n", score);
+    //printf("letter score: %d\n", score);
     return score;
 
 }
