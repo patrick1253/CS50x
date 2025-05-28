@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-int scoreLetter(char* input, int *value[26][2]);
-int scoreWord(char* word, int length);
+int scoreLetter(char *input, int **value);
+int scoreWord(char *word, int length);
 
 
 int letterValues[26][2] = {{'a',1}, {'b',3}, {'c',3}, {'d',2}, {'e',1}, \
@@ -17,7 +17,7 @@ int letterValues[26][2] = {{'a',1}, {'b',3}, {'c',3}, {'d',2}, {'e',1}, \
 
 //int (*pLetterValues)[26][26] = &letterValues[26][26];
 //int* pLetterValues[26][26] = &letterValues;
-int *pLetterValues[26][2];
+int **pLetterValues;
 
 //char letter = {'z'};
 //char* pLetter = &letter; 
@@ -73,7 +73,7 @@ int main(void)
 }
 
 
-int scoreWord(char* word, int length)
+int scoreWord(char *word, int length)
     // Add the letter scores for all letters in the word and return the word score to main().
 {
     int totalScore = 0;
@@ -89,14 +89,14 @@ int scoreWord(char* word, int length)
 }
 
 
-int scoreLetter(char* input, int *value[26][2])
+int scoreLetter(char *input, int **value)
     // receive one letter, search for that letter in letterValues, return score from letterValues
 {
     char inputLetter = *input;
     //printf("string: %c, ascii: %d\n", inputLetter, inputLetter);
     //printf("letter: %c,  ", inputLetter);
 
-    int score = *value[(inputLetter - 97)][1];
+    int score = value[(inputLetter - 97)][1];
     //printf("letter score: %d\n", score);
     return score;
 
