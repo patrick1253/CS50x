@@ -1,12 +1,14 @@
-// CS50x assignment: count the Scrabble points for two words and determine the winner.
+// CS50x assignment: count the Scrabble points for two words and determine the winner.  v2 passes 
+// the letterValues array to the functions directly, vice passing a pointer.  This improvement was 
+// suggested by Grok ai.
 
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-int scoreLetter(char *input, int **value);
-int scoreWord(char *word, int length);
+int scoreLetter(char input, int letterValues[][2]);
+int scoreWord(char *word, int length, int letterValues[][2]);
 
 
 int letterValues[26][2] = {{'a',1}, {'b',3}, {'c',3}, {'d',2}, {'e',1}, \
@@ -17,21 +19,22 @@ int letterValues[26][2] = {{'a',1}, {'b',3}, {'c',3}, {'d',2}, {'e',1}, \
 
 //int (*pLetterValues)[26][26] = &letterValues[26][26];
 //int* pLetterValues[26][26] = &letterValues;
-int **pLetterValues;
+// int **pLetterValues;
 
 //char letter = {'z'};
 //char* pLetter = &letter; 
 
 int main(void)
 {
-    for (int i = 0; i < 26; i++)
+    /*for (int i = 0; i < 26; i++)
     {
         for (int j = 0; j < 3; j++)
         {
             pLetterValues[i][j] = &letterValues[i][j];
         }    
     }
-    
+    */
+
     int scores[2];
 
     for (int p = 0; p < 2; p++)
@@ -50,7 +53,7 @@ int main(void)
 
         //printf("Player %i: %s\n", p + 1, word);
 
-        scores[p] = scoreWord(word, length);
+        scores[p] = scoreWord(word, length, letterValues);
     }
 
     //printf("Player 1 score: %i\n", scores[0]);
@@ -61,43 +64,49 @@ int main(void)
         printf("It's a tie!\n");
     }
 
-    if (scores[0] > scores[1])
+    else if (scores[0] > scores[1])
     {
         printf("Player 1 wins!\n");
     }
     
-    if (scores[0] < scores[1])
+    else if (scores[0] < scores[1])
     {
         printf("Player 2 wins!\n");
     }
+    return 0;
 }
 
 
-int scoreWord(char *word, int length)
+int scoreWord(char *word, int length, int letterValues[][2])
     // Add the letter scores for all letters in the word and return the word score to main().
 {
     int totalScore = 0;
 
     for (int k = 0; k < length; k++)
     {
-        char inputLetter = word[k];
-        char* pInput = &inputLetter;
-        totalScore = totalScore + scoreLetter(pInput, pLetterValues);
+        //char inputLetter = word[k];
+        //char* pInput = &inputLetter;
+        totalScore += scoreLetter(word[k], letterValues);
     }
         printf("Total Word Score: %i\n", totalScore);
         return totalScore;
 }
 
 
-int scoreLetter(char *input, int **value)
+int scoreLetter(char input, int letterValues[][2])
     // receive one letter, search for that letter in letterValues, return score from letterValues
 {
-    char inputLetter = *input;
+    if (!isalpha(input))
+    {
+        return 0;
+    }
+
+    //char inputLetter = *input;
     //printf("string: %c, ascii: %d\n", inputLetter, inputLetter);
     //printf("letter: %c,  ", inputLetter);
-
-    int score = value[(inputLetter - 97)][1];
+    input = tolower(input);
+    //int score = value[(input - 'a')][1];
     //printf("letter score: %d\n", score);
-    return score;
+    return letterValues[input - 'a'][1];
 
 }
