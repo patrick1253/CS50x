@@ -90,9 +90,9 @@ void print_winner(void)
     {
         if (candidates[i].votes >= mostVotes)
         {
-            mostVotes = candidates[i].votes;
+            mostVotes = candidates[i].votes;        
+            // printf("most votes: %s\n", candidates[i].name);
         }            
-        //printf("most votes: %s\n", candidates[i].name);
     }
     int k = 0;
     for (int j = 0; j < candidate_count; j++)
@@ -103,6 +103,6 @@ void print_winner(void)
             k++;
         }
     }
-    printf("Winner: %s\n", winner);
+    printf("Winner: %s, votes: %i\n", winner, mostVotes);
     return;
 }
